@@ -11,7 +11,7 @@ from pythonosc import udp_client
 
 # TODO: Boost CPU performance with openvino model https://medium.com/@gkhndmn4/yolo-cpu-performance-enhancement-3685b7fa84a5
 
-timestep = 0.5  # seconds
+timestep = 0.25  # seconds
 
 
 def calculate_speed(coordinates,previous_position):
@@ -45,7 +45,7 @@ args = parser.parse_args()
 client = udp_client.SimpleUDPClient(args.ip, args.port)
 
 # start webcam
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 cap.set(3,1200)# 1920)
 cap.set(4,600)# 1080)
 
@@ -86,7 +86,8 @@ while True:
             # bounding box
             x1, y1, x2, y2 = box.xyxy[0]
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2) # convert to int values
-            center = (x2-x1, y2-y1)
+            # center = (x2-x1, y2-y1)
+            center = (x1+((x2-x1)/2),y1+((y2-y1)/2))
 
             # confidence
             confidence = math.ceil((box.conf[0]*100))/100
@@ -148,7 +149,7 @@ while True:
                 #         print(track_id)
                 #         # print(center)
                 #         if track_id:
-                    client.send_message("/object", [track_id, total_area/1000, *center])#*average_color, total_area])
+                    client.send_message("/object", [track_id, total_area/1000, center[0], center[1], speed, confidence ]) # x1, x2, y1, y2])#*average_color, total_area])
 
     cv2.imshow('Webcam', img)
     if cv2.waitKey(1) == ord('q'):

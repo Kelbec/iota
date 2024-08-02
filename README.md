@@ -6,3 +6,8 @@ Itinerant Oscillations in Terminal Areas.
 ## PD
 - mrpeach
 - vscplugin~
+
+## Python 
+```
+pip install ultralytics python-osc
+```
