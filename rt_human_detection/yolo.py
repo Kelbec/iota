@@ -6,7 +6,7 @@ import numpy as np
 import argparse
 import time
 from collections import defaultdict
-
+import screeninfo
 from pythonosc import udp_client
 
 # TODO: Boost CPU performance with openvino model https://medium.com/@gkhndmn4/yolo-cpu-performance-enhancement-3685b7fa84a5
@@ -46,8 +46,19 @@ client = udp_client.SimpleUDPClient(args.ip, args.port)
 
 # start webcam
 cap = cv2.VideoCapture(0)
-cap.set(3,1200)# 1920)
-cap.set(4,600)# 1080)
+# Get screen resolution
+screen = screeninfo.get_monitors()[0]  # Assuming you want to use the primary monitor
+screen_width, screen_height = screen.width, screen.height
+
+# Set video frame width and height to match screen resolution
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, screen_width)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, screen_height)
+# cap.set(3,1200)# 1920)
+# cap.set(4,600)# 1080)
+
+# Set the frame rate (in frames per second)
+desired_frame_rate = 30.0
+cap.set(cv2.CAP_PROP_FPS, desired_frame_rate)
 
 # model
 model = YOLO("yolo-Weights/yolov8n.pt")
@@ -155,7 +166,7 @@ while True:
     if cv2.waitKey(1) == ord('q'):
         break
     # print(positions)
-    time.sleep(timestep)
+    # time.sleep(timestep)
 
 cap.release()
 cv2.destroyAllWindows()
