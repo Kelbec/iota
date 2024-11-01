@@ -51,7 +51,7 @@ cap.set(cv2.CAP_PROP_FRAME_WIDTH, screen_width)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, screen_height)
 
 # Set the frame rate (in frames per second)
-desired_frame_rate = 30.0
+desired_frame_rate = 120.0
 cap.set(cv2.CAP_PROP_FPS, desired_frame_rate)
 
 # Model
